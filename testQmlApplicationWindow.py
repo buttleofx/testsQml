@@ -1,34 +1,61 @@
 import sys
+import logging
 
-from PyQt5.QtCore import QCoreApplication, QUrl
-from PyQt5.QtQml import QQmlComponent, QQmlEngine
+from PyQt5 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtQml
 
-# Create the application instance.
-app = QCoreApplication(sys.argv)
 
-print("A")
+class TestApp(QtGui.QGuiApplication):
+    def __init__(self, argv):
+        super(TestApp, self).__init__(argv)
 
-# Create a QML engine.
-engine = QQmlEngine(app)
-print("B")
+#    def notify(self, receiver, event):
+#        try:
+#            return QtGui.QGuiApplication.notify(self, receiver, event)
+#        except Exception as e:
+#            logging.exception("QApp notify exception: " + str(e))
+#            import traceback
+#            traceback.print_exc()
+#            return False
 
-# Create a component factory and load the QML script.
-component = QQmlComponent(engine)
-print("C")
-component.loadUrl(QUrl('example.qml'))
+def main(argv):
+    
+    # Create the application instance.
+    app = TestApp(sys.argv)
+    
+    print("A")
+    
+    # Create a QML engine.
+    engine = QtQml.QQmlEngine(app)
+    print("B")
+    
+    # Create a component factory and load the QML script.
+    component = QtQml.QQmlComponent(engine)
+    print("C")
+    component.loadUrl(QtCore.QUrl("example.qml"))
+    
+    print("D")
+    # Create an instance of the component.
+    topLevel = component.create()
+    
+    print("E")
+    if topLevel is not None:
+        topLevel.show()
+    else:
+        # Print all errors that occurred.
+        for error in component.errors():
+            print(error.toString())
+    
+    print("F")
 
-print("D")
-# Create an instance of the component.
-topLevel = component.create()
+    app.exec_()
+    
+    print("Z")
 
-print("E")
-if topLevel is not None:
-    help(topLevel)
-    topLevel.show()
-else:
-    # Print all errors that occurred.
-    for error in component.errors():
-        print(error.toString())
 
-print("Z")
+if __name__ == '__main__':
+
+    main(sys.argv)
+    print("End")
 
